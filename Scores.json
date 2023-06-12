@@ -1,0 +1,30 @@
+{
+    "Wiktor": {
+        "Difficulty": [
+            [
+                "Easy",
+                2
+            ],
+            [
+                "Hard",
+                2
+            ]
+        ]
+    },
+    "Ben": {
+        "Difficulty": [
+            [
+                "Easy",
+                1
+            ]
+        ]
+    },
+    "Beniek": {
+        "Difficulty": [
+            [
+                "Easy",
+                1
+            ]
+        ]
+    }
+}
