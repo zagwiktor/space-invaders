@@ -56,4 +56,6 @@ class Username():
             return False
         if not re.match(r'^[\w]+$', self.username):
             return False
+        if not 4 <= len(self.username) <= 15:
+            return False
         return True

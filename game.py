@@ -22,6 +22,7 @@ class Game():
     HARD_BUTTON = pygame.image.load(os.path.join("images", "hard_button.png"))
     SCORES_BUTTON = pygame.image.load(os.path.join("images", "scores-button.png"))
     BACK_BUTTON = pygame.image.load(os.path.join("images", "back_button.png"))
+    GUIDE_BUTTON = pygame.image.load(os.path.join("images", "guide_button.png"))
     WINDOW = pygame.display.set_mode(size=(WIDTH, HEIGHT))
 
     def __init__(self):
@@ -30,7 +31,7 @@ class Game():
         self.wave = 5
         self.enemy_velocity = 1
         self.level = 0
-        self.lives = 3
+        self.lives = 4
         self.lost_timer = 0
         self.FPS = 60
         self.lost_message = False
@@ -69,7 +70,10 @@ class Game():
         game_is_on = True
         self.lost_message = False
         self.player.health = 100
-        self.lives = 3
+        if self.player.difficulty == "Medium":
+            self.lives = 3
+        else:
+            self.lives = 4
         self.level = 0
         self.player.x = 600
         self.player.y = 850
@@ -158,6 +162,8 @@ class Game():
                              self.HEIGHT / 2 - self.PLAY_BUTTON.get_height() / 2 + 450, self.QUIT_BUTTON)
         scores_button = Button((self.WIDTH / 2 - self.PLAY_BUTTON.get_width() / 2),
                                (self.HEIGHT / 2 - self.PLAY_BUTTON.get_height() / 2) + 300, self.SCORES_BUTTON)
+        info_button = Button(self.WIDTH - self.GUIDE_BUTTON.get_width() - 30,
+                             self.HEIGHT - self.GUIDE_BUTTON.get_height() - 15, self.GUIDE_BUTTON)
         while menu_is_open:
             self.WINDOW.blit(self.GAME_BACKGROUND, (0, 0))
             menu_label = self.font.render("MENU", 1, (255, 255, 255))
@@ -170,6 +176,7 @@ class Game():
             scores_button.draw(self.WINDOW)
             options_button.draw(self.WINDOW)
             quit_button.draw(self.WINDOW)
+            info_button.draw(self.WINDOW)
             pygame.display.update()
             for event in pygame.event.get():
                 if play_button.clicked() and self.username_passed:
@@ -178,6 +185,8 @@ class Game():
                     self.player.difficulty = self.options()
                 if scores_button.clicked() and self.username_passed:
                     self.scores()
+                if info_button.clicked():
+                    self.guide()
                 if quit_button.clicked() or event.type == pygame.QUIT:
                     menu_is_open = False
                 username.typing(event)
@@ -217,9 +226,10 @@ class Game():
                     options_are_open = False
                     return "Medium"
                 if hard_button.clicked():
-                    self.lives = 3
+                    self.lives = 4
                     self.enemy_velocity = 2
                     self.enemy_laser_velocity = 6
+                    self.velocity_of_ship = 7
                     self.player_damage = 50
                     options_are_open = False
                     return "Hard"
@@ -266,3 +276,51 @@ class Game():
                     scores_are_open = False
                 if event.type == pygame.QUIT:
                     scores_are_open = False
+
+    def guide(self):
+        guide_is_open = True
+        back_button = Button((self.WIDTH / 2 - self.BACK_BUTTON.get_width() / 2), self.HEIGHT - 170, self.BACK_BUTTON)
+        guide_label = self.font.render("GUIDE", 1, (255, 255, 255))
+        rules_font = pygame.font.Font(os.path.join("font", "GameSansSerif7-oPGx.ttf"), 20)
+        rule_1_label = rules_font.render("1. To use the play/options/scores features, you must first enter a username.", 1, (255, 255, 255))
+        rule_2_label = rules_font.render("The username must contain 4 to 15 characters, including 1 uppercase letter, and cannot contain special characters.", 1,(255, 255, 255))
+        rule_3_label = rules_font.render("2. To change the difficulty level, click on the options button.", 1, (255, 255, 255))
+        rule_4_label = rules_font.render("Easy - monsters are slow, can be defeated with a single laser hit, player has 4 lives.", 1, (255, 255, 255))
+        rule_5_label = rules_font.render("Medium - monsters are faster, can be defeated with a single laser hit, player has 3 lives.", 1, (255, 255, 255))
+        rule_6_label = rules_font.render("Hard - monsters are faster, can be defeated with two laser hits, player is also faster and has 4 lives.", 1, (255, 255, 255))
+        rule_7_label = rules_font.render("3. To start the gameplay, press the play button.", 1, (255, 255, 255))
+        rule_8_label = rules_font.render("The game involves shooting down incoming monsters. After defeating all the monsters, the level and", 1, (255, 255, 255))
+        rule_9_label = rules_font.render("the number of monsters appearing in the next wave increase. The player loses health if they collide", 1, (255, 255, 255))
+        rule_10_label = rules_font.render("with a monster or get hit by its laser.The player loses the game when their spaceship's health bar", 1, (255, 255, 255))
+        rule_11_label = rules_font.render("is depleted or when a specific number of monsters reach the bottom of the screen. The information", 1, (255, 255, 255))
+        rule_12_label = rules_font.render("about how many monsters can reach the end of the screen is displayed in the top right corner", 1, (255, 255, 255))
+        rule_13_label = rules_font.render("and is called lives. You can move the spaceship using the W, S, A, D keys.", 1, (255, 255, 255))
+        rule_14_label = rules_font.render("4. To see the best scores achieved, click the scores button.", 1, (255, 255, 255))
+
+
+
+        while guide_is_open:
+            self.WINDOW.blit(self.GAME_BACKGROUND, (0, 0))
+            self.WINDOW.blit(guide_label, (self.WIDTH / 2 - guide_label.get_width() / 2, 50))
+            self.WINDOW.blit(rule_1_label, (self.WIDTH / 2 - rule_1_label.get_width() / 2, 150))
+            self.WINDOW.blit(rule_2_label, (self.WIDTH / 2 - rule_2_label.get_width() / 2, 190))
+            self.WINDOW.blit(rule_3_label, (self.WIDTH / 2 - rule_3_label.get_width() / 2, 265))
+            self.WINDOW.blit(rule_4_label, (self.WIDTH / 2 - rule_4_label.get_width() / 2, 305))
+            self.WINDOW.blit(rule_5_label, (self.WIDTH / 2 - rule_5_label.get_width() / 2, 345))
+            self.WINDOW.blit(rule_6_label, (self.WIDTH / 2 - rule_6_label.get_width() / 2, 385))
+            self.WINDOW.blit(rule_7_label, (self.WIDTH / 2 - rule_7_label.get_width() / 2, 460))
+            self.WINDOW.blit(rule_8_label, (self.WIDTH / 2 - rule_8_label.get_width() / 2, 500))
+            self.WINDOW.blit(rule_9_label, (self.WIDTH / 2 - rule_9_label.get_width() / 2, 540))
+            self.WINDOW.blit(rule_10_label, (self.WIDTH / 2 - rule_10_label.get_width() / 2, 580))
+            self.WINDOW.blit(rule_11_label, (self.WIDTH / 2 - rule_11_label.get_width() / 2, 620))
+            self.WINDOW.blit(rule_12_label, (self.WIDTH / 2 - rule_12_label.get_width() / 2, 660))
+            self.WINDOW.blit(rule_13_label, (self.WIDTH / 2 - rule_13_label.get_width() / 2, 700))
+            self.WINDOW.blit(rule_14_label, (self.WIDTH / 2 - rule_14_label.get_width() / 2, 775))
+            back_button.draw(self.WINDOW)
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if back_button.clicked():
+                    guide_is_open = False
+                if event.type == pygame.QUIT:
+                    guide_is_open = False
