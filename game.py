@@ -139,7 +139,7 @@ class Game():
 
             self.player.move_lasers(-5)
 
-            for laser in self.player.lasers:
+            for laser in self.player.lasers[:]:
                 for enemy in self.enemies:
                     if self.collision(laser, enemy):
                         enemy.health -= self.player_damage
@@ -168,8 +168,12 @@ class Game():
             self.WINDOW.blit(self.GAME_BACKGROUND, (0, 0))
             menu_label = self.font.render("MENU", 1, (255, 255, 255))
             username_label = self.font.render("USERNAME: ", 1, (255, 255, 255))
-            username.update()
-            username.draw(self.WINDOW)
+            if not self.username_passed:
+                username.update()
+                username.draw(self.WINDOW)
+            else:
+                player_username_label = self.font.render(f"{self.player.username}", 1, (255, 255, 255))
+                self.WINDOW.blit(player_username_label, (self.WIDTH / 2 - player_username_label.get_width() / 2, 350))
             self.WINDOW.blit(menu_label, (self.WIDTH / 2 - menu_label.get_width() / 2, 50))
             self.WINDOW.blit(username_label, (self.WIDTH / 2 - username_label.get_width() / 2 + 30, 250))
             play_button.draw(self.WINDOW)
@@ -193,7 +197,6 @@ class Game():
             if username.final_username is not None:
                 self.username_passed = True
                 self.player.username = username.final_username
-
         pygame.quit()
 
     def options(self):
@@ -204,7 +207,6 @@ class Game():
         easy_button = Button(medium_x - 300, medium_y, self.EASY_BUTTON)
         hard_button = Button(medium_x + 360, medium_y, self.HARD_BUTTON)
 
-
         while options_are_open:
             self.WINDOW.blit(self.GAME_BACKGROUND, (0, 0))
             options_label = self.font.render("OPTIONS", 1, (255, 255, 255))
@@ -213,7 +215,6 @@ class Game():
             medium_button.draw(self.WINDOW)
             hard_button.draw(self.WINDOW)
             pygame.display.update()
-
 
             for event in pygame.event.get():
                 if easy_button.clicked():
@@ -296,8 +297,6 @@ class Game():
         rule_12_label = rules_font.render("about how many monsters can reach the end of the screen is displayed in the top right corner", 1, (255, 255, 255))
         rule_13_label = rules_font.render("and is called lives. You can move the spaceship using the W, S, A, D keys.", 1, (255, 255, 255))
         rule_14_label = rules_font.render("4. To see the best scores achieved, click the scores button.", 1, (255, 255, 255))
-
-
 
         while guide_is_open:
             self.WINDOW.blit(self.GAME_BACKGROUND, (0, 0))
