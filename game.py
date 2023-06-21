@@ -223,6 +223,8 @@ class Game():
                 if medium_button.clicked():
                     self.lives = 3
                     self.enemy_velocity = 2
+                    self.velocity_of_ship = 7
+                    self.player_damage = 100
                     self.enemy_laser_velocity = 6
                     options_are_open = False
                     return "Medium"
